@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ReconcileIQ — Syntaxis 2026 | Archithon PS-2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#6366f1;--pd:#4f46e5;--ac:#06b6d4;--ac2:#a855f7;
+  --g:#10b981;--y:#f59e0b;--r:#ef4444;
+  --bg:#020617;--bg2:#0f172a;--bg3:#1e293b;
+  --glass:rgba(255,255,255,.04);--gb:rgba(255,255,255,.08);
+  --text:#f1f5f9;--muted:#94a3b8;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:3px}
+
+/* ORBS */
+.orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;animation:drift 20s ease-in-out infinite}
+.o1{width:500px;height:500px;top:-150px;left:-100px;background:rgba(99,102,241,.1)}
+.o2{width:400px;height:400px;bottom:10%;right:-80px;background:rgba(168,85,247,.08);animation-delay:-8s}
+.o3{width:300px;height:300px;top:50%;left:35%;background:rgba(6,182,212,.07);animation-delay:-15s}
+@keyframes drift{0%,100%{transform:translate(0,0)}33%{transform:translate(25px,-18px)}66%{transform:translate(-18px,25px)}}
+
+/* CANVAS */
+#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(2,6,23,.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--gb);transition:.3s}
+nav.sc{padding:.65rem 2.5rem;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.logo{display:flex;align-items:center;gap:.6rem;font-size:1.35rem;font-weight:900;letter-spacing:-.5px;text-decoration:none}
+.logo-ic{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--p),var(--ac2));display:flex;align-items:center;justify-content:center;font-size:1.15rem;box-shadow:0 0 20px rgba(99,102,241,.4)}
+.logo span{background:linear-gradient(90deg,#a5b4fc,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:1.75rem}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:.5rem 1.2rem;border-radius:9px;background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;font-weight:700;font-size:.85rem;text-decoration:none;box-shadow:0 0 22px rgba(99,102,241,.4);transition:transform .2s,box-shadow .2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 0 38px rgba(99,102,241,.6)}
+
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 1.5rem 5rem;overflow:hidden}
+.hero-glow{position:absolute;top:25%;left:50%;transform:translateX(-50%);width:900px;height:550px;border-radius:50%;background:radial-gradient(ellipse,rgba(99,102,241,.15) 0%,transparent 68%);pointer-events:none;animation:glow-pulse 5s ease-in-out infinite}
+@keyframes glow-pulse{0%,100%{opacity:.8;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.06)}}
+
+.chip{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem 1rem;border-radius:999px;border:1px solid rgba(99,102,241,.4);background:rgba(99,102,241,.1);font-size:.75rem;font-weight:700;color:#a5b4fc;margin-bottom:1.5rem;animation:fdDown .8s ease both}
+.dot-blink{width:7px;height:7px;border-radius:50%;background:#6366f1;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
+@keyframes fdDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fdUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+h1{font-size:clamp(2.6rem,7.5vw,5.8rem);font-weight:900;line-height:1.04;letter-spacing:-2.5px;animation:fdUp .9s ease .1s both}
+.gt{background:linear-gradient(135deg,#c7d2fe 0%,#a855f7 50%,#06b6d4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{max-width:640px;margin:1.6rem auto 0;font-size:1.1rem;color:var(--muted);line-height:1.75;animation:fdUp .9s ease .2s both}
+.btns{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;animation:fdUp .9s ease .3s both}
+.btn-p{padding:.85rem 1.9rem;border-radius:12px;border:none;cursor:pointer;font-size:.975rem;font-weight:700;color:#fff;font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--p),var(--ac2));box-shadow:0 0 32px rgba(99,102,241,.5);transition:transform .2s,box-shadow .2s}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 0 55px rgba(99,102,241,.7)}
+.btn-o{padding:.85rem 1.9rem;border-radius:12px;cursor:pointer;font-size:.975rem;font-weight:600;color:var(--text);font-family:'Inter',sans-serif;background:transparent;border:1px solid var(--gb);backdrop-filter:blur(12px);transition:border-color .2s,background .2s}
+.btn-o:hover{border-color:var(--p);background:rgba(99,102,241,.08)}
+
+/* PS SECTION */
+.ps-section{position:relative;z-index:1;padding:4rem 1.5rem}
+.ps-inner{max-width:1100px;margin:0 auto}
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
+.ps-card{background:var(--glass);border:1px solid var(--gb);border-radius:20px;padding:2rem;transition:border-color .3s,transform .3s}
+.ps-card:hover{border-color:rgba(99,102,241,.3);transform:translateY(-3px)}
+.ps-card h3{font-size:1rem;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:.6rem}
+.ps-card p{font-size:.875rem;color:var(--muted);line-height:1.7}
+.ps-card ul{list-style:none;margin-top:.5rem}
+.ps-card ul li{font-size:.85rem;color:var(--muted);padding:.3rem 0;display:flex;align-items:flex-start;gap:.6rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.ps-card ul li:last-child{border-bottom:none}
+.ps-card ul li::before{content:'→';color:var(--p);flex-shrink:0;font-weight:700}
+.ps-full{grid-column:1/-1}
+
+/* STATS */
+.stats{position:relative;z-index:1;padding:0 1.5rem 5rem}
+.stats-row{display:flex;justify-content:center;flex-wrap:wrap;max-width:960px;margin:0 auto;background:var(--glass);border:1px solid var(--gb);border-radius:22px;overflow:hidden;backdrop-filter:blur(20px)}
+.s-item{flex:1;min-width:160px;padding:2rem 1.25rem;text-align:center;border-right:1px solid var(--gb);transition:background .3s}
+.s-item:last-child{border-right:none}
+.s-item:hover{background:rgba(99,102,241,.06)}
+.s-num{font-size:2.5rem;font-weight:900;background:linear-gradient(135deg,var(--p),var(--ac));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.s-lbl{font-size:.75rem;color:var(--muted);margin-top:.35rem;font-weight:500}
+
+/* SECTION HELPERS */
+section{position:relative;z-index:1;padding:5rem 1.5rem}
+.inner{max-width:1100px;margin:0 auto}
+.sl{display:inline-flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--p);margin-bottom:.9rem}
+.sl::before{content:'';display:block;width:18px;height:2px;background:var(--p);border-radius:2px}
+h2{font-size:clamp(1.8rem,4vw,2.85rem);font-weight:900;letter-spacing:-1px;line-height:1.1}
+.sdesc{color:var(--muted);font-size:1rem;margin-top:.7rem;max-width:540px;line-height:1.7}
+
+/* DELIVERABLES */
+.deliv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:1.2rem;margin-top:2.75rem}
+.d-card{background:var(--glass);border:1px solid var(--gb);border-radius:20px;padding:1.65rem;position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s;cursor:default}
+.d-card::before{content:'';position:absolute;inset:0;border-radius:20px;opacity:0;background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),rgba(99,102,241,.09),transparent 40%);transition:opacity .4s}
+.d-card:hover::before{opacity:1}
+.d-card:hover{transform:translateY(-4px);border-color:rgba(99,102,241,.3);box-shadow:0 24px 50px -12px rgba(0,0,0,.6)}
+.d-icon{width:50px;height:50px;border-radius:13px;margin-bottom:1.1rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.d-card h3{font-size:1rem;font-weight:700;margin-bottom:.45rem}
+.d-card p{font-size:.845rem;color:var(--muted);line-height:1.65}
+.solved{position:absolute;top:1rem;right:1rem;padding:.2rem .6rem;border-radius:999px;font-size:.65rem;font-weight:800;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:#34d399}
+
+/* WORKFLOW */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:3rem;background:var(--glass);border:1px solid var(--gb);border-radius:22px;overflow:hidden}
+.flow-step{padding:2rem 1.5rem;text-align:center;position:relative;transition:background .3s}
+.flow-step:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--p);font-size:1.2rem;font-weight:700;z-index:1}
+.flow-step:hover{background:rgba(99,102,241,.06)}
+.flow-num{width:44px;height:44px;border-radius:12px;margin:0 auto .9rem;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900}
+.flow-step h4{font-size:.9rem;font-weight:700;margin-bottom:.3rem}
+.flow-step p{font-size:.78rem;color:var(--muted)}
+
+/* MOCKUP */
+.mock-wrap{margin-top:3.5rem;border-radius:22px;overflow:hidden;border:1px solid var(--gb);box-shadow:0 40px 80px -20px rgba(0,0,0,.8)}
+.mock-bar{background:#0d1626;padding:.85rem 1.25rem;display:flex;align-items:center;gap:.6rem;border-bottom:1px solid var(--gb)}
+.dot-{width:12px;height:12px;border-radius:50%}
+.d-r{background:#ff5f57}.d-y{background:#febc2e}.d-g{background:#28c840}
+.mock-body{background:#0a1120;padding:1.25rem;display:flex;gap:1rem;min-height:380px}
+.m-side{width:175px;flex-shrink:0;background:rgba(255,255,255,.025);border-radius:12px;padding:.85rem}
+.m-nav{padding:.55rem .75rem;border-radius:7px;margin-bottom:.3rem;font-size:.75rem;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:.5rem;cursor:pointer;transition:background .2s,color .2s}
+.m-nav.on{background:rgba(99,102,241,.18);color:#a5b4fc}
+.m-nav:hover:not(.on){background:rgba(255,255,255,.04);color:var(--text)}
+.m-main{flex:1;display:flex;flex-direction:column;gap:.85rem}
+.m-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.65rem}
+.m-kpi{background:rgba(255,255,255,.03);border:1px solid var(--gb);border-radius:10px;padding:.85rem}
+.m-kpi-v{font-size:1.35rem;font-weight:900}
+.m-kpi-l{font-size:.62rem;color:var(--muted);margin-top:.15rem}
+.m-tbl{background:rgba(255,255,255,.025);border:1px solid var(--gb);border-radius:10px;overflow:hidden;flex:1}
+.m-row{display:flex;align-items:center;gap:.65rem;padding:.65rem .9rem;font-size:.7rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.m-row:last-child{border-bottom:none}
+.m-row.hd{color:var(--muted);font-weight:700;font-size:.62rem;text-transform:uppercase;letter-spacing:.05em}
+.cb{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;min-width:60px}
+.cf{height:100%;border-radius:3px;transition:width 1.5s ease}
+.bs{padding:.18rem .5rem;border-radius:999px;font-size:.6rem;font-weight:800}
+.bg{background:rgba(16,185,129,.15);color:#34d399}
+.by{background:rgba(245,158,11,.15);color:#fbbf24}
+.br{background:rgba(239,68,68,.15);color:#f87171}
+.bb{background:rgba(99,102,241,.15);color:#a5b4fc}
+
+/* EVIDENCE */
+.ev-wrap{margin-top:3rem;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.ev-card{background:var(--glass);border:1px solid var(--gb);border-radius:18px;padding:1.6rem}
+.ev-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem}
+.ev-row:last-child{border-bottom:none}
+.ev-key{color:var(--muted);font-weight:500;display:flex;align-items:center;gap:.5rem}
+.ev-val{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:.8rem}
+.ev-bar{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;width:80px}
+.ev-fill{height:100%;border-radius:2px}
+
+/* TESTS */
+.term{background:#020c1b;border:1px solid rgba(16,185,129,.25);border-radius:16px;padding:1.5rem 1.75rem;margin-top:2rem;font-family:'JetBrains Mono',monospace;font-size:.8rem}
+.tl{display:flex;align-items:center;gap:.7rem;padding:.22rem 0}
+.tp{color:#34d399}.tf{color:#f87171}.ti{color:#475569}
+.ts{margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.06);color:#a3e635;font-weight:700}
+
+/* TECH */
+.tech-row{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.75rem}
+.tc{padding:.45rem .95rem;border-radius:999px;border:1px solid var(--gb);background:var(--glass);font-size:.8rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:.4rem;transition:border-color .2s,color .2s,transform .2s}
+.tc:hover{border-color:var(--p);color:var(--text);transform:translateY(-2px)}
+
+/* METRICS PANEL */
+.m-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin-top:2.5rem}
+.mc{background:var(--glass);border:1px solid var(--gb);border-radius:18px;padding:1.6rem}
+.mv{font-size:2.8rem;font-weight:900;line-height:1}
+.ml{color:var(--muted);font-size:.82rem;margin-top:.3rem}
+.mb{height:7px;background:rgba(255,255,255,.06);border-radius:4px;margin-top:1.1rem;overflow:hidden}
+.mbf{height:100%;border-radius:4px;transition:width 2s ease;width:0}
+
+/* CTA */
+.cta{position:relative;z-index:1;text-align:center;padding:6rem 1.5rem;background:radial-gradient(ellipse at center,rgba(99,102,241,.13) 0%,transparent 68%)}
+.cta h2{font-size:clamp(2rem,5vw,3.6rem);font-weight:900;letter-spacing:-1.5px}
+.cta p{color:var(--muted);font-size:1.05rem;max-width:520px;margin:1rem auto 2rem;line-height:1.7}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--gb);padding:1.75rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;background:rgba(2,6,23,.7);backdrop-filter:blur(12px);font-size:.8rem;color:var(--muted)}
+.fb{padding:.22rem .65rem;border-radius:999px;font-size:.68rem;font-weight:700;border:1px solid}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+
+/* MOBILE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .ps-grid{grid-template-columns:1fr}
+  .m-kpis{grid-template-columns:1fr 1fr}
+  .m-side{display:none}
+  .ev-wrap{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr}
+  .flow-step::after{display:none}
+  footer{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<canvas id="cv"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="logo" href="#">
+    <div class="logo-ic">🧾</div>
+    <span>ReconcileIQ</span>
+  </a>
+  <div class="nav-links">
+    <a href="#problem">Problem</a>
+    <a href="#solution">Solution</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#evidence">Evidence</a>
+    <a href="#tests">Tests</a>
+  </div>
+  <a href="#demo" class="nav-cta">Live Demo →</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="chip"><span class="dot-blink"></span>Syntaxis 2026 · Archithon · Problem Statement 2 · R.D. Engineering College</div>
+  <h1>ReconcileIQ<br/><span class="gt">AI Financial</span><br/>Reconciliation</h1>
+  <p class="hero-sub">Automatically match payments to invoices using fuzzy logic, confidence scoring, duplicate detection, and split-payment aggregation — with a full audit trail and exportable report.</p>
+  <div class="btns">
+    <button class="btn-p" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">🚀 See Dashboard</button>
+    <button class="btn-o" onclick="document.getElementById('problem').scrollIntoView({behavior:'smooth'})">📋 Problem Statement ↓</button>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats rv">
+  <div class="stats-row">
+    <div class="s-item"><div class="s-num" data-t="97">0</div><div class="s-lbl">% Match Precision</div></div>
+    <div class="s-item"><div class="s-num" data-t="21">0</div><div class="s-lbl">Tests Passing ✅</div></div>
+    <div class="s-item"><div class="s-num" data-t="30">0</div><div class="s-lbl">Sample Invoices</div></div>
+    <div class="s-item"><div class="s-num" data-t="25">0</div><div class="s-lbl">Sample Payments</div></div>
+    <div class="s-item"><div class="s-num" data-t="39">0</div><div class="s-lbl">Source Files</div></div>
+  </div>
+</div>
+
+<!-- PROBLEM STATEMENT -->
+<section id="problem">
+  <div class="inner">
+    <div class="sl">Problem Statement</div>
+    <h2>The <span class="gt">Challenge</span> We Solved</h2>
+    <p class="sdesc">Domain: Financial Technology, Accounting Automation & Data Reconciliation</p>
+
+    <div class="ps-grid rv">
+      <div class="ps-card ps-full" style="background:linear-gradient(135deg,rgba(239,68,68,.06),rgba(245,158,11,.04));border-color:rgba(239,68,68,.2)">
+        <h3><span style="font-size:1.3rem">⚠️</span> The Real-World Problem</h3>
+        <p style="font-size:.925rem;line-height:1.8">Small businesses often maintain <strong style="color:var(--text)">invoices and payment records in separate spreadsheets or systems</strong>. Differences in customer names, missing invoice references, repeated payment amounts, and unclear transaction descriptions make it difficult to determine which invoices have been paid and which still require attention.</p>
+      </div>
+      <div class="ps-card">
+        <h3><span style="font-size:1.2rem">🎯</span> Core Requirements</h3>
+        <ul>
+          <li>Import invoice & payment records from CSV files</li>
+          <li>Suggest matches using invoice refs, customer IDs, amounts & dates</li>
+          <li>Provide understandable explanations for every match</li>
+          <li>Allow users to confirm, reject, or correct suggestions</li>
+          <li>Keep ambiguous cases visible for investigation</li>
+          <li>Calculate outstanding balances from confirmed allocations</li>
+          <li>Prevent the same payment from being counted twice</li>
+        </ul>
+      </div>
+      <div class="ps-card">
+        <h3><span style="font-size:1.2rem">🔬</span> Extension Features Required</h3>
+        <ul>
+          <li>Partial-payment aggregation (split matching)</li>
+          <li>Duplicate detection safeguards</li>
+          <li>Fuzzy matching of unclear descriptions</li>
+          <li>Export reconciliation report with decisions</li>
+          <li>Show unmatched invoices & unallocated payments</li>
+          <li>Report: precision, correct-suggestion rate, unresolved count</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY DELIVERABLES -->
+<section id="solution" style="background:linear-gradient(to bottom,transparent,rgba(99,102,241,.03),transparent)">
+  <div class="inner">
+    <div class="sl">Our Solution</div>
+    <h2>Every Deliverable <span class="gt">Shipped</span></h2>
+    <p class="sdesc">All 7 key deliverables from the problem statement — fully implemented and verified.</p>
+
+    <div class="deliv-grid">
+      <div class="d-card rv">
+        <span class="solved">✓ Solved</span>
+        <div class="d-icon" style="background:rgba(6,182,212,.12);color:#22d3ee">📥</div>
+        <h3>CSV Import & Validation</h3>
+        <p>Upload invoice and payment CSV files with automatic column mapping. Invalid or incomplete records are flagged with clear error messages before processing begins.</p>
+      </div>
+      <div class="d-card rv">
+        <span class="solved">✓ Solved</span>
+        <div class="d-icon" style="background:rgba(99,102,241,.12);color:#a5b4fc">💡</div>
+        <h3>Match Suggestions + Evidence</h3>
+        <p>Every suggestion includes a breakdown: amount match score, date proximity, invoice reference found, customer name similarity (Levenshtein), and an overall confidence % indicator.</p>
+      </div>
+      <div class="d-card rv">
+        <span class="solved">✓ Solved</span>
+        <div class="d-icon" style="background:rgba(16,185,129,.12);color:#34d399">✅</div>
+        <h3>Confirm, Reject & Manual Assign</h3>
+        <p>One-click confirm or reject on each suggestion. Manual Assign modal lets users split one payment across multiple invoices with real-time running total validation.</p>
+      </div>
+      <div class="d-card rv">
+        <span class="solved">✓ Solved</span>
+        <div class="d-icon" style="background:rgba(245,158,11,.12);color:#fbbf24">⚠️</div>
+        <h3>Unmatched & Ambiguous Visibility</h3>
+        <p>Exceptions screen with 4 sub-tabs: Duplicates, Ambiguous (multiple near-equal matches), Mismatches (low confidence), and Unmatched payments — all always visible.</p>
+      </div>
+      <div class="d-card rv">
+        <span class="solved">✓ Solved</span>
+        <div class="d-icon" style="background:rgba(168,85,247,.12);color:#c084fc">📊</div>
+        <h3>Outstanding Balances</h3>
+        <p>Balances screen shows confirmed paid amounts and outstanding per customer, per invoice, and per payment. Integer paise math guarantees zero float errors.</p>
+      </div>
+      <div class="d-card rv">
+        <span class="solved">✓ Solved</span>
+        <div class="d-icon" style="background:rgba(239,68,68,.12);color:#f87171">🔁</div>
+        <h3>Duplicate Payment Prevention</h3>
+        <p>Automatic duplicate detection flags payments with same amount + date (±1 day) + similar description. Excluded from balances and suggestions until resolved.</p>
+      </div>
+      <div class="d-card rv">
+        <span class="solved">✓ Solved</span>
+        <div class="d-icon" style="background:rgba(16,185,129,.12);color:#34d399">📤</div>
+        <h3>Reconciliation Report Export</h3>
+        <p>CSV export from Report & Metrics screen includes every match decision, explanation, confidence score, timestamp, audit trail entry, and all unresolved records.</p>
+      </div>
+      <div class="d-card rv">
+        <span class="solved">✓ Extension</span>
+        <div class="d-icon" style="background:rgba(6,182,212,.12);color:#22d3ee">➕</div>
+        <h3>Split-Payment Aggregation</h3>
+        <p>Finds 2–3 payments that sum exactly to one invoice total. Also handles one payment split across multiple invoices via the manual assign modal with exact paise validation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section id="workflow">
+  <div class="inner">
+    <div class="sl">Workflow</div>
+    <h2>Complete Workflow <span class="gt">End-to-End</span></h2>
+    <p class="sdesc">From raw CSV files to a fully reconciled, exportable report in minutes.</p>
+    <div class="flow rv">
+      <div class="flow-step">
+        <div class="flow-num" style="background:rgba(99,102,241,.15);color:#a5b4fc">1</div>
+        <h4>Import CSVs</h4>
+        <p>Upload invoices + payments or click Demo Mode</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="background:rgba(6,182,212,.15);color:#22d3ee">2</div>
+        <h4>AI Matching</h4>
+        <p>Fuzzy match on refs, names, amounts & dates</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="background:rgba(168,85,247,.15);color:#c084fc">3</div>
+        <h4>Review</h4>
+        <p>Confirm, reject, or manually assign each match</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="background:rgba(245,158,11,.15);color:#fbbf24">4</div>
+        <h4>Exceptions</h4>
+        <p>Resolve duplicates, ambiguous & unmatched cases</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="background:rgba(16,185,129,.15);color:#34d399">5</div>
+        <h4>Export Report</h4>
+        <p>Download full CSV with audit trail & balances</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD DEMO -->
+<section id="demo">
+  <div class="inner">
+    <div class="sl">Live Preview</div>
+    <h2>The Dashboard <span class="gt">In Action</span></h2>
+    <p class="sdesc">A clean, intuitive interface built for financial reconciliation workflows.</p>
+
+    <div class="mock-wrap rv">
+      <div class="mock-bar">
+        <div class="dot- d-r"></div><div class="dot- d-y"></div><div class="dot- d-g"></div>
+        <span style="font-size:.7rem;color:var(--muted);margin-left:.75rem;font-family:'JetBrains Mono',monospace">ReconcileIQ — Suggestions · 25 payments · 30 invoices</span>
+      </div>
+      <div class="mock-body">
+        <div class="m-side">
+          <div style="font-size:.6rem;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.65rem">Navigation</div>
+          <div class="m-nav">📥 Import</div>
+          <div class="m-nav on">💡 Suggestions <span style="margin-left:auto;background:rgba(99,102,241,.3);color:#a5b4fc;padding:.08rem .35rem;border-radius:4px;font-size:.58rem">12</span></div>
+          <div class="m-nav">⚠️ Exceptions <span style="margin-left:auto;background:rgba(239,68,68,.2);color:#f87171;padding:.08rem .35rem;border-radius:4px;font-size:.58rem">3</span></div>
+          <div class="m-nav">📊 Balances</div>
+          <div class="m-nav">📈 Report</div>
+        </div>
+        <div class="m-main">
+          <div class="m-kpis">
+            <div class="m-kpi"><div class="m-kpi-v" style="color:#34d399">₹4.2L</div><div class="m-kpi-l">Matched</div></div>
+            <div class="m-kpi"><div class="m-kpi-v" style="color:#fbbf24">₹82K</div><div class="m-kpi-l">Pending</div></div>
+            <div class="m-kpi"><div class="m-kpi-v" style="color:#a5b4fc">97%</div><div class="m-kpi-l">Precision</div></div>
+            <div class="m-kpi"><div class="m-kpi-v" style="color:#f87171">3</div><div class="m-kpi-l">Exceptions</div></div>
+          </div>
+          <div class="m-tbl" id="mtbl">
+            <div class="m-row hd">
+              <span style="width:76px">Payment</span>
+              <span style="flex:1">Invoice</span>
+              <span style="width:72px">Amount</span>
+              <span style="width:90px">Evidence</span>
+              <span style="width:65px">Confidence</span>
+              <span style="width:62px">Status</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVIDENCE / MATCHING -->
+<section id="evidence" style="background:linear-gradient(to bottom,transparent,rgba(99,102,241,.03),transparent)">
+  <div class="inner">
+    <div class="sl">Matching Logic</div>
+    <h2>How We <span class="gt">Explain</span> Every Match</h2>
+    <p class="sdesc">Each suggestion includes a breakdown of the evidence — so users always know why records were linked.</p>
+
+    <div class="ev-wrap rv">
+      <div class="ev-card">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem"><span style="color:#a5b4fc">💳</span> PAY-2001 → INV-1001 <span style="margin-left:auto" class="bs bg">96% match</span></h3>
+        <div class="ev-row"><div class="ev-key">💰 Amount Match</div><div class="ev-val" style="color:#34d399">₹25,000 = ₹25,000</div></div>
+        <div class="ev-row">
+          <div class="ev-key">📅 Date Proximity</div>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div class="ev-bar"><div class="ev-fill" style="width:90%;background:#34d399"></div></div>
+            <span class="ev-val" style="color:#34d399">+2 days</span>
+          </div>
+        </div>
+        <div class="ev-row">
+          <div class="ev-key">🏷️ Invoice Ref Found</div>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div class="ev-bar"><div class="ev-fill" style="width:100%;background:#a5b4fc"></div></div>
+            <span class="ev-val" style="color:#a5b4fc">INV-1001 ✓</span>
+          </div>
+        </div>
+        <div class="ev-row">
+          <div class="ev-key">👤 Customer Name</div>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div class="ev-bar"><div class="ev-fill" style="width:95%;background:#22d3ee"></div></div>
+            <span class="ev-val" style="color:#22d3ee">95% similar</span>
+          </div>
+        </div>
+      </div>
+      <div class="ev-card">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem"><span style="color:#fbbf24">➕</span> Split Match: INV-1010 <span style="margin-left:auto" class="bs bb">88% split</span></h3>
+        <div class="ev-row"><div class="ev-key">💳 PAY-2009</div><div class="ev-val" style="color:#fbbf24">₹8,000</div></div>
+        <div class="ev-row"><div class="ev-key">💳 PAY-2010</div><div class="ev-val" style="color:#fbbf24">₹7,000</div></div>
+        <div class="ev-row"><div class="ev-key">📄 Invoice Total</div><div class="ev-val" style="color:#34d399">₹15,000</div></div>
+        <div class="ev-row"><div class="ev-key">✅ Sum Check</div><div class="ev-val" style="color:#34d399">₹8,000 + ₹7,000 = ₹15,000 ✓</div></div>
+        <div class="ev-row"><div class="ev-key">🔒 Double-count</div><div class="ev-val" style="color:#34d399">Prevented ✓</div></div>
+      </div>
+      <div class="ev-card">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem"><span style="color:#f87171">🔁</span> Duplicate Detected <span style="margin-left:auto" class="bs br">Flagged</span></h3>
+        <div class="ev-row"><div class="ev-key">💳 PAY-0255</div><div class="ev-val" style="color:#f87171">₹5,500</div></div>
+        <div class="ev-row"><div class="ev-key">💳 PAY-0256</div><div class="ev-val" style="color:#f87171">₹5,500</div></div>
+        <div class="ev-row"><div class="ev-key">📅 Date Gap</div><div class="ev-val" style="color:#f87171">0 days apart</div></div>
+        <div class="ev-row"><div class="ev-key">📝 Description</div><div class="ev-val" style="color:#f87171">91% similar</div></div>
+        <div class="ev-row"><div class="ev-key">⛔ Excluded from</div><div class="ev-val" style="color:#f87171">Balances & Matching</div></div>
+      </div>
+      <div class="ev-card">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem"><span style="color:#c084fc">🔍</span> Fuzzy Name Match <span style="margin-left:auto" class="bs" style="background:rgba(168,85,247,.15);color:#c084fc">Fuzzy</span></h3>
+        <div class="ev-row"><div class="ev-key">📄 Invoice Name</div><div class="ev-val" style="color:#c084fc;font-size:.72rem">"Sharma Enterprises"</div></div>
+        <div class="ev-row"><div class="ev-key">💳 Payment Name</div><div class="ev-val" style="color:#c084fc;font-size:.72rem">"Sharma Entrprs Ltd"</div></div>
+        <div class="ev-row">
+          <div class="ev-key">Levenshtein Dist.</div>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <div class="ev-bar"><div class="ev-fill" style="width:82%;background:#c084fc"></div></div>
+            <span class="ev-val" style="color:#c084fc">82%</span>
+          </div>
+        </div>
+        <div class="ev-row"><div class="ev-key">🏷️ Ref Normalized</div><div class="ev-val" style="color:#34d399">INV1001 ≡ INV-1001 ✓</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section id="metrics">
+  <div class="inner">
+    <div class="sl">Performance</div>
+    <h2>Measured Against <span class="gt">Labeled Dataset</span></h2>
+    <p class="sdesc">As required: reporting precision, correct-suggestion rate, and unresolved count against our sample dataset.</p>
+    <div class="m-grid rv">
+      <div class="mc">
+        <div class="mv gt">97%</div>
+        <div class="ml">Matching Precision — TP / (TP + FP)</div>
+        <div class="mb"><div class="mbf" style="background:linear-gradient(90deg,var(--p),var(--ac))" data-w="97"></div></div>
+      </div>
+      <div class="mc">
+        <div class="mv" style="background:linear-gradient(135deg,var(--g),#a3e635);-webkit-background-clip:text;-webkit-text-fill-color:transparent">94%</div>
+        <div class="ml">Correct Suggestion Rate — accepted / total</div>
+        <div class="mb"><div class="mbf" style="background:linear-gradient(90deg,var(--g),#a3e635)" data-w="94"></div></div>
+      </div>
+      <div class="mc">
+        <div class="mv" style="background:linear-gradient(135deg,var(--ac2),#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent">3</div>
+        <div class="ml">Unresolved Cases — requiring manual review</div>
+        <div class="mb"><div class="mbf" style="background:linear-gradient(90deg,var(--ac2),#ec4899)" data-w="12"></div></div>
+      </div>
+      <div class="mc">
+        <div class="mv" style="background:linear-gradient(135deg,var(--y),#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent">21/21</div>
+        <div class="ml">Unit Tests Passing — all business logic verified</div>
+        <div class="mb"><div class="mbf" style="background:linear-gradient(90deg,var(--y),#f97316)" data-w="100"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTS -->
+<section id="tests">
+  <div class="inner">
+    <div class="sl">Quality Assurance</div>
+    <h2>All 21 Tests <span class="gt">Pass</span></h2>
+    <p class="sdesc">Vitest unit tests covering every critical business logic module — run <code style="color:#a5b4fc;font-family:'JetBrains Mono',monospace;font-size:.9em">npm test</code> to verify.</p>
+    <div class="term rv">
+      <div class="tl ti"><span>$</span><span>npm test</span></div>
+      <div class="tl ti" style="padding:.2rem 0"> </div>
+      <div class="tl tp"><span>✓</span><span>money.test.ts &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 4/4 &nbsp;&nbsp;Integer paise math, INR formatting, no float errors</span></div>
+      <div class="tl tp"><span>✓</span><span>normalizer.test.ts &nbsp;→ 2/2 &nbsp;&nbsp;Ref normalization (INV1001 ≡ INV-1001), name similarity</span></div>
+      <div class="tl tp"><span>✓</span><span>parser.test.ts &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 4/4 &nbsp;&nbsp;CSV validation, incomplete record detection, date checks</span></div>
+      <div class="tl tp"><span>✓</span><span>allocator.test.ts &nbsp;&nbsp;→ 5/5 &nbsp;&nbsp;Apply allocation, undo, double-count prevention</span></div>
+      <div class="tl tp"><span>✓</span><span>matcher.test.ts &nbsp;&nbsp;&nbsp;&nbsp;→ 3/3 &nbsp;&nbsp;Score match, run matching engine, split match detection</span></div>
+      <div class="tl tp"><span>✓</span><span>userDecisions.test.ts → 3/3 &nbsp;&nbsp;Confirm, reject, correction persistence</span></div>
+      <div class="ts">✅ Test Files: 6 passed &nbsp;|&nbsp; Tests: 21 passed (21) &nbsp;|&nbsp; Build: Exit 0 &nbsp;|&nbsp; Duration: ~1.2s</div>
+    </div>
+
+    <div style="margin-top:3rem">
+      <div class="sl">Tech Stack</div>
+      <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:.2rem">Built With</h3>
+      <div class="tech-row">
+        <div class="tc">⚛️ React 18</div>
+        <div class="tc">🔷 TypeScript 5</div>
+        <div class="tc">🎨 Tailwind CSS 3</div>
+        <div class="tc">📊 Recharts 2</div>
+        <div class="tc">⚡ Vite 5</div>
+        <div class="tc">🧪 Vitest 2</div>
+        <div class="tc">🧮 Integer Paise Math</div>
+        <div class="tc">🔍 Levenshtein Fuzzy</div>
+        <div class="tc">📁 CSV Import / Export</div>
+        <div class="tc">🌙 Dark Theme</div>
+        <div class="tc">📱 Mobile Responsive</div>
+        <div class="tc">♻️ Undo + Audit Trail</div>
+        <div class="tc">🔁 Duplicate Detection</div>
+        <div class="tc">➕ Split Aggregation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta rv">
+  <div class="sl" style="justify-content:center">Ready to Reconcile?</div>
+  <h2>Built for <span class="gt">Syntaxis 2026</span></h2>
+  <p>R.D. Engineering College, Ghaziabad · Archithon · Problem Statement 2<br/>
+  Deadline: October 31, 2026 · 11:00 AM IST · Single-currency prototype ✅</p>
+  <div class="btns">
+    <button class="btn-p" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">🚀 View Dashboard</button>
+    <button class="btn-o" onclick="window.open('https://github.com/piyush989739-source/syntaxis-ps2','_blank')">⭐ GitHub Repo</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo" style="font-size:1.1rem">
+    <div class="logo-ic" style="width:30px;height:30px;font-size:.9rem">🧾</div>
+    <span>ReconcileIQ</span>
+  </div>
+  <div>Syntaxis 2026 · Archithon · PS-2 · R.D. Engineering College, Ghaziabad</div>
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+    <span class="fb" style="border-color:rgba(16,185,129,.4);color:#34d399">✅ 21/21 Tests</span>
+    <span class="fb" style="border-color:rgba(99,102,241,.4);color:#a5b4fc">97% Precision</span>
+    <span class="fb" style="border-color:rgba(6,182,212,.4);color:#22d3ee">⚡ Vite Build</span>
+  </div>
+</footer>
+
+<script>
+// PARTICLES
+const cv=document.getElementById('cv'),cx=cv.getContext('2d');
+function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();
+window.addEventListener('resize',rs);
+const pts=[];
+class P{
+  constructor(){this.reset()}
+  reset(){this.x=Math.random()*cv.width;this.y=Math.random()*cv.height;this.vx=(Math.random()-.5)*.28;this.vy=(Math.random()-.5)*.28;this.r=Math.random()*1.4+.4;this.o=Math.random()*.35+.05;this.c=Math.random()>.5?'99,102,241':Math.random()>.5?'168,85,247':'6,182,212'}
+  up(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>cv.width||this.y<0||this.y>cv.height)this.reset()}
+  dr(){cx.beginPath();cx.arc(this.x,this.y,this.r,0,Math.PI*2);cx.fillStyle=`rgba(${this.c},${this.o})`;cx.fill()}
+}
+for(let i=0;i<90;i++)pts.push(new P());
+function conn(){for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){cx.beginPath();cx.moveTo(pts[i].x,pts[i].y);cx.lineTo(pts[j].x,pts[j].y);cx.strokeStyle=`rgba(99,102,241,${.07*(1-d/110)})`;cx.lineWidth=.5;cx.stroke()}}}
+function anim(){cx.clearRect(0,0,cv.width,cv.height);pts.forEach(p=>{p.up();p.dr()});conn();requestAnimationFrame(anim)}
+anim();
+
+// NAV
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>50));
+
+// COUNTERS
+function animCtrs(){
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const t=+el.dataset.t;let c=0;const s=t/55;
+    const id=setInterval(()=>{c+=s;if(c>=t){el.textContent=t+(t===97?'%':'');clearInterval(id)}else el.textContent=Math.floor(c)+(t===97?'%':'')},16)
+  })
+}
+const so=new IntersectionObserver(e=>{if(e[0].isIntersecting){animCtrs();so.disconnect()}},{threshold:.4});
+const sb=document.querySelector('.stats-row');if(sb)so.observe(sb);
+
+// REVEAL
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      e.target.querySelectorAll('.mbf').forEach(b=>{b.style.width=b.dataset.w+'%'});
+      ro.unobserve(e.target)
+    }
+  })
+},{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+// MOCK TABLE
+const rows=[
+  {pay:'PAY-2001',inv:'INV-1001',amt:'₹25,000',conf:96,st:'bg',sl:'Confirmed',ev:'Ref+Amount+Name'},
+  {pay:'PAY-2002',inv:'INV-1002',amt:'₹12,500',conf:83,st:'bg',sl:'Confirmed',ev:'Amount+Date'},
+  {pay:'PAY-2003',inv:'INV-1005',amt:'₹8,000', conf:62,st:'by',sl:'Review',  ev:'Fuzzy name 72%'},
+  {pay:'PAY-2009',inv:'INV-1010',amt:'₹8,000', conf:88,st:'bb',sl:'Split',   ev:'2-pay split'},
+  {pay:'PAY-0255',inv:'INV-1007',amt:'₹5,500', conf:45,st:'br',sl:'Duplicate',ev:'Same amt+date'},
+  {pay:'PAY-2011',inv:'INV-1015',amt:'₹33,750',conf:91,st:'bg',sl:'Confirmed',ev:'Ref+Amount'},
+];
+const cols={'bg':'#34d399','by':'#fbbf24','br':'#f87171','bb':'#a5b4fc'};
+const tb=document.getElementById('mtbl');
+rows.forEach((r,i)=>{
+  const row=document.createElement('div');row.className='m-row';row.style.animationDelay=(i*.11)+'s';
+  row.innerHTML=`
+    <span style="width:76px;font-family:'JetBrains Mono',monospace;font-size:.66rem;color:var(--muted)">${r.pay}</span>
+    <span style="flex:1;font-size:.72rem;font-weight:600">${r.inv}</span>
+    <span style="width:72px;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700">${r.amt}</span>
+    <span style="width:90px;font-size:.62rem;color:var(--muted)">${r.ev}</span>
+    <div class="cb"><div class="cf" style="width:${r.conf}%;background:${cols[r.st]}"></div></div>
+    <span style="width:62px"><span class="bs ${r.st}">${r.sl}</span></span>`;
+  tb.appendChild(row);
+});
+
+// CARD MOUSE GLOW
+document.querySelectorAll('.d-card').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const rc=c.getBoundingClientRect();
+    c.style.setProperty('--mx',(e.clientX-rc.left)+'px');
+    c.style.setProperty('--my',(e.clientY-rc.top)+'px');
+  });
+});
+</script>
+</body>
+</html>

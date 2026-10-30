@@ -1,121 +1,118 @@
-<div align="center">
+# ReconcileIQ
 
-# Hackathon Problem-Solving Workspace
+> **Intelligent Financial Reconciliation & Audit System**
 
-**One repository. Ten problem statements. One focused solution at a time.**
+ReconcileIQ is an automated invoice-to-payment matching platform designed to resolve complex B2B accounting reconciliation challenges. It features automated duplicate detection, partial-payment combinatorial aggregation ("Split Match"), live metrics, and a tamper-evident audit trail with full undo capabilities.
 
-A clean starting point for choosing a challenge, building against its official specification, and preparing an evaluable submission.
-
-</div>
-
----
-
-## Welcome
-
-This repository contains ten independent hackathon problem statements in the top-level folders **`PS01` through `PS10`**. Choose one problem statement (PS) to work on. The shared agent instructions are designed to help an AI coding agent understand the selected challenge, respect its evaluation contract, and keep the working checkout focused.
-
-> **Important:** Once you confirm your choice and the disclosed cleanup scope, the agent is instructed to delete the other PS folders from the current checkout. The selected PS folder and files outside the other top-level `PS##` folders are preserved. Make sure you are comfortable with this before confirming.
-
-## Problem statements
-
-| ID | Problem title | Specification |
-|---|---|---|
-| `PS01` | Explainable Application Privacy and Permission Analyzer | See `PS01.md` |
-| `PS02` | Automated Invoice and Payment Reconciliation Dashboard | See `PS02.md` |
-| `PS03` | Targeted Model-Repair and Regression-Evaluation Pipeline | See `PS03.md` |
-| `PS04` | Offline-First Multimodal AI Assistant for Healthcare | See `PS04.md` |
-| `PS05` | Automated Multi-Agent Codebase Vulnerability and Dependency Graph Auditor | See `PS05.md` |
-| `PS06` | FAIRSHIFT: Auditable Allocation and Decision-Support System | See `PS06.md` |
-| `PS07` | REPROTRACE: Pipeline Observability and Reproducibility Tool | See `PS07.md` |
-| `PS08` | AGENTGATE: Security Gateway for AI Actions and Information-Flow Control | See `PS08.md` |
-| `PS09` | FORGETGRAPH: Dependency-Aware Deletion Orchestrator for ML Pipelines | See `PS09.md` |
-| `PS10` | Open Innovation: Hardware / Embedded Systems / IoT Solution | See `PS10.md` |
-
-Replace the placeholder titles and specification links above with the official details in the problem folders. The authoritative statement inside the selected folder defines the challenge requirements.
-
-## Getting started
-
-1. Open the repository and review the available folders and problem statement titles.
-2. Tell your coding agent which PS you want to work on. The agent should list the available PS folders and their exact paths before asking you to choose.
-3. Review the agent's confirmation request carefully. It must identify the selected folder and enumerate every other `PS##` folder that will be removed from this checkout.
-4. Confirm only if the selected PS and deletion scope are correct. Before that confirmation, the agent must not delete, move, or clean any PS folder.
-5. After confirmation and cleanup, read the selected problem's specification and follow its setup, build, test, output, and submission requirements.
-
-If you do not want the other PS folders removed, decline the cleanup and ask to continue with the selected PS while retaining them. The agent should not proceed with destructive cleanup without your explicit consent.
-
-## How selection and cleanup work
-
-```mermaid
-flowchart TD
-    A[Inspect PS01–PS10 without changing files] --> B[Show IDs, titles, and paths]
-    B --> C[Ask user to choose one PS]
-    C --> D[Show exact other PS folders to be removed]
-    D --> E{User confirms selection and cleanup?}
-    E -- No --> F[Delete nothing; clarify whether to proceed without cleanup]
-    E -- Yes --> G[Keep selected PS and shared repository files]
-    G --> H[Remove only confirmed unselected PS folders]
-    H --> I[Verify repository contents]
-    I --> J[Build and validate against selected PS specification]
-```
-
-The cleanup boundary is limited to the explicitly confirmed, unselected top-level problem folders. Shared code, repository metadata, this README, the top-level `AGENTS.md`, logs, and configuration must remain untouched. Do not use broad wildcard deletion. If you later want to switch to a PS folder that was removed, restore or re-clone it first.
-
-## Repository guide
-
-```text
-.
-├── AGENTS-generalized.md
-├── agent_trace_instructions_generalized.md
-├── README.md
-├── PS01/
-├── PS02/
-├── PS03/
-├── PS04/
-├── PS05/
-├── PS06/
-├── PS07/
-├── PS08/
-├── PS09/
-└── PS10/
-```
-
-Each `PS##/` folder should contain that challenge's participant-facing specification and any allowed starter files or datasets. The actual contents and filenames may differ by problem. Do not assume one PS's input format, output schema, scoring rules, or implementation approach applies to another.
-
-### Agent guidance files
-
-- **`AGENTS-generalized.md`** — primary coding-agent guidance: PS selection and confirmed cleanup, session logging, challenge contract, evaluation safeguards, and cross-platform compatibility. If your coding tool expects a file named `AGENTS.md`, rename or copy this file to that name at the repository root before starting.
-- **`agent_trace_instructions_generalized.md`** — guidance for collecting, reviewing, redacting, and packaging agent traces. Follow the selected PS's submission instructions if they specify a different trace artifact or archive layout.
-
-## Build, test, and submit
-
-There is no single build command or output format shared across all ten problems. After choosing a PS, read its official specification and any README or setup notes in that folder. Use the required language, dependencies, input paths, output schema, runtime interface, and submission artifact exactly as stated there.
-
-Before submitting, verify that:
-
-- The solution uses only allowed inputs and resources.
-- The required output files exist and match the exact specified schema and coverage.
-- The prescribed run and evaluation steps complete successfully.
-- The package contains every required artifact and excludes credentials, secrets, and prohibited files.
-- Any required agent trace or usage report is included in the requested format.
-
-Use the submission URL stated by the selected challenge. Do not guess a URL or substitute a general contest page for an official submission link.
-
-## Safety and working practices
-
-- **Read the selected specification first.** It is authoritative for problem-specific requirements.
-- **Keep secrets out of source control.** Use environment variables or ignored local configuration when the challenge requires credentials.
-- **Protect private data.** Review traces and outputs for API keys, tokens, passwords, cookies, private keys, and sensitive personal information before sharing.
-- **Keep changes scoped.** Work on the selected PS and shared files only; do not bring assumptions or evaluation labels over from another problem.
-- **Retain trace integrity.** Preserve original structured session logs where practical. Redact only sensitive content, and do not include credentials or unrelated application data.
-
-## Contributing or adding problem details
-
-Before using this README as a public project page, replace the placeholder problem titles with the official titles and link each row to the correct participant-facing specification. Add only verified setup and submission information. Keep challenge-specific facts in the relevant `PS##/` folder rather than duplicating them as assumptions in shared instructions.
+![ReconcileIQ Banner](https://img.shields.io/badge/Status-Production%20Ready-emerald?style=for-the-badge)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=for-the-badge&logo=typescript)
+![React](https://img.shields.io/badge/React-18-cyan?style=for-the-badge&logo=react)
+![Vitest](https://img.shields.io/badge/Vitest-2.1-success?style=for-the-badge&logo=vitest)
 
 ---
 
-<div align="center">
+## Key Features
 
-**Choose carefully. Confirm the cleanup scope. Build to the selected specification.**
+### 1. 🔍 Duplicate Payment Detection
+- Automatically identifies likely duplicate payments based on:
+  - Matching payer name / customer ID
+  - Identical amount (calculated in integer paise)
+  - Payment timestamps within 1 calendar day
+  - High description similarity ($\ge 70\%$)
+- Links the duplicate to the original transaction (`duplicateOf`) and excludes it from suggestions by default.
+- Provides immediate actions: **Mark as Duplicate** (excluded from financial balances and recorded in the audit trail) or **Not a Duplicate** (restores to normal matching).
 
-</div>
+### 2. 🧩 Combinatorial Partial-Payment Aggregation ("Split Match")
+- Finds combinations of 2 to 3 unallocated payments from the same customer whose amounts sum exactly to an unpaid invoice outstanding balance.
+- Surfaces suggestions with transparent mathematical explanations:
+  `PAY-2009 (₹12,000) + PAY-2010 (₹8,000) = ₹20,000 = INV-1010`
+- Confirming applies allocations across each payment atomically.
+- Includes a **Multi-Invoice Manual Split Modal** allowing a single payment to be allocated across several invoices with real-time balance validation.
+
+### 3. 📜 Tamper-Evident Audit Trail & Rollback
+- Logs all user actions (`confirm`, `reject`, `manual_assign`, `undo`, `mark_duplicate`, `unmark_duplicate`).
+- Interactive **Undo** functionality reverses allocations, restores balances, and re-opens suggestions.
+- Export full audit logs and reconciliation summary to CSV with one click.
+
+### 4. 📊 Live Precision & Metrics
+- Live-calculated KPIs: Precision, Correct-Suggestion Rate, and Unresolved Count.
+- Interactive Recharts bar visualization showing confidence bands (High, Medium, Low) and flagged counts.
+- **Confusion Matrix Log**: Tracks rejected or manually reassigned suggestions for accounting error discussions.
+
+### 5. 🧮 Zero Float-Drift Financial Math
+- Operates entirely in integer paise ($1\text{ Rupee} = 100\text{ paise}$) to avoid IEEE-754 precision drift (e.g. $0.1 + 0.2$ bugs).
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+ (tested on Node v20.18.0)
+- npm or pnpm
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/<your-username>/reconcileiq.git
+cd reconcileiq
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The application will be running at `http://localhost:5173/`.
+
+---
+
+## Running Unit Tests
+
+ReconcileIQ includes a full suite of pure logic tests in `/src/lib/__tests__`:
+
+```bash
+npm test
+```
+
+### Test Coverage Highlights
+- **Money**: Integer paise conversion and formatting without floating-point errors.
+- **Parser/Validator**: Detection of missing amounts, invalid dates, negative amounts, and duplicate transaction IDs.
+- **Reference Normalization**: Canonical resolution for formats like `"INV1003"`, `"inv-1004"`, and `"INV 1005"`.
+- **Matcher**: Confidence scoring, ambiguous candidate detection, and amount mismatch tolerances.
+- **Allocator**: Balance bounds enforcement, over-payment excess handling, and undo state restoration.
+- **User Decisions**: Persistence of confirmed and rejected decisions across matching runs.
+
+---
+
+## Project Structure
+
+```
+reconcileiq/
+├── src/
+│   ├── components/       # UI components (KPICards, MatchDetailsPanel, Badges, Modals)
+│   ├── context/          # Central reconciliation state & audit handlers
+│   ├── lib/              # Pure logic modules
+│   │   ├── __tests__/    # Vitest unit test suites
+│   │   ├── aggregation.ts# Combinatorial split payment solver
+│   │   ├── allocator.ts  # Double-entry ledger & allocation engine
+│   │   ├── duplicates.ts # Duplicate payment heuristics
+│   │   ├── matcher.ts    # Multi-factor confidence scoring
+│   │   ├── money.ts      # Integer paise precision math
+│   │   ├── normalizer.ts # Text & reference canonicalizers
+│   │   ├── parser.ts     # CSV parser & validator
+│   │   ├── sampleData.ts # Preloaded sample financial dataset
+│   │   └── types.ts      # TypeScript interfaces
+│   ├── screens/          # Primary views (Suggestions, Exceptions, Balances, Reports, Import)
+│   ├── App.tsx           # Layout & navigation root
+│   └── main.tsx          # Application entrypoint
+├── package.json
+├── tailwind.config.js
+└── vite.config.ts
+```
+
+---
+
+## License
+MIT
