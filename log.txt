@@ -42,3 +42,102 @@ branch=not configured
 repo_root=/tmp/cc-agent/72528364/project
 worktree=main
 parent_agent=none
+
+master prompt we used 
+Build a production-ready, full-stack Financial Reconciliation web application called "ReconcileIQ" (React 18, TypeScript, Tailwind CSS, Recharts, Vite, Vitest) designed for the Syntaxis 2026 / Archithon Hackathon (Problem Statement 2: Accounting Automation & Data Reconciliation).
+
+The application must import and reconcile invoices and payments, provide explainable AI suggestions with confidence scores, maintain integer-precision balances, and enforce strict auditability.
+
+---
+
+### 1. CORE FINANCIAL & RECONCILIATION ENGINE (`/src/lib`)
+
+1. **Integer Paise Monetary Math (`money.ts`):**
+   - Perform all calculations in integer paise (₹1 = 100 paise) to prevent IEEE-754 floating-point drift.
+   - Functions: `toPaise(rupees)`, `fromPaise(paise)`, `formatINR(paise)`, `addPaise()`, `subPaise()`. Zero floating-point rounding errors.
+
+2. **Reference Normalization & Fuzzy Similarity (`normalizer.ts`):**
+   - Normalize invoice and payment references: `"INV1001"`, `"inv-1001"`, `"INV 1001"` must all resolve to standard format.
+   - Implement Levenshtein distance for fuzzy matching between inconsistent payer/customer names.
+
+3. **CSV Parsing & Validation (`parser.ts`):**
+   - Ingest invoice and payment CSV records with validation.
+   - Detect and flag invalid records: missing amounts, invalid dates, negative amounts, or duplicate IDs before matching.
+
+4. **Duplicate Detection (`duplicates.ts`):**
+   - Detect likely duplicate payments: same customer/payer, identical amount, payment dates within 1 day (±24h), and similar description.
+   - Link duplicates together, flag with "Possible Duplicate", and exclude from suggestions by default.
+   - Provide two explicit user actions: "Mark as Duplicate" (excludes from balances and logs to report) and "Not a Duplicate" (restores to normal matching).
+
+5. **Partial-Payment & Split Aggregation (`aggregation.ts`):**
+   - Split-to-One Match: Search for combinations of 2 to 3 unallocated payments from the same customer whose amounts sum exactly to an invoice's outstanding balance (e.g., `PAY-2009 (₹8,000) + PAY-2010 (₹7,000) = ₹15,000 = INV-1010`).
+   - One-to-Multiple Split: Support allocating a single payment across multiple invoices with real-time running total validation.
+
+6. **Explainable Matching Engine (`matcher.ts`):**
+   - Multi-factor scoring: Amount match (exact/partial), date proximity (within payment terms), reference matching, and customer name similarity.
+   - Output confidence score (0-100%) categorized into High (≥80%), Medium (50-79%), Low (<50%).
+   - Cap ambiguous matches (multiple close contenders) at Medium confidence and flag as "Ambiguous".
+   - Flag "Amount Mismatch" when refs match but amounts differ.
+   - Provide clear textual explanations for each suggestion.
+
+7. **Allocation State & Audit Trail (`allocator.ts`):**
+   - Safeguards: A payment cannot be allocated more than once or beyond its available balance. Confirming an over-allocation must be rejected.
+   - Maintain ledger balances: customer balances, invoice remaining, payment unallocated.
+   - Full audit trail logging every action (confirm, reject, manual assign, undo, mark duplicate) with timestamps and amounts.
+   - Support a one-click "Undo" that restores previous balances and suggestions.
+
+---
+
+### 2. UNIT TESTS WITH VITEST (`npm test`)
+
+Write unit tests in `/src/lib/__tests__/` with 100% pass rate:
+- `money.test.ts`: 4 tests (paise math, edge cases like 0.1 + 0.2, INR formatting).
+- `normalizer.test.ts`: 2 tests (reference stripping, Levenshtein customer similarity).
+- `parser.test.ts`: 4 tests (missing fields, invalid dates, bad amounts).
+- `allocator.test.ts`: 5 tests (apply allocation, over-allocation prevention, undo balance restoration, double-count safeguards).
+- `matcher.test.ts`: 3 tests (scoring rules, ambiguity capping, split match detection).
+- `userDecisions.test.ts`: 3 tests (confirm/reject persistence, manual split overrides).
+
+---
+
+### 3. USER INTERFACE & SCREENS
+
+Build a responsive UI with a dark theme (Tailwind CSS):
+
+1. **Sidebar & Header:**
+   - Navigation links with live badge counts: Import, Suggestions, Exceptions, Balances, Report & Metrics.
+   - Top KPI Summary Cards: Total Matched Amount, Pending Amount, Precision Rate %, Active Exceptions.
+
+2. **Screen 1: Import Screen (`ImportScreen.tsx`):**
+   - Drag-and-drop CSV upload for Invoices and Payments with column mapping preview.
+   - "Demo Mode" button that immediately loads a labeled dataset (30 invoices, 25 payments including pre-configured duplicate pairs and split-payment cases) and navigates to Suggestions.
+
+3. **Screen 2: Suggestions Screen (`SuggestionsScreen.tsx`):**
+   - Interactive table showing payment ↔ invoice pairs with amounts, dates, and evidence tags.
+   - Color-coded confidence badges (🟢 High, 🟡 Medium, 🔴 Low) with hover tooltips explaining the scoring breakdown.
+   - Warning banner if duplicate payments or unresolved high-value items exist.
+   - Inline actions: "Confirm", "Reject", and "Manual Assign" (opens a multi-invoice split modal).
+
+4. **Screen 3: Exceptions Screen (`ExceptionsScreen.tsx`):**
+   - 4 filtered sub-tabs: Duplicates (with Mark/Unmark buttons), Ambiguous Cases, Amount Mismatches, and Unmatched Records.
+
+5. **Screen 4: Balances Ledger (`BalancesScreen.tsx`):**
+   - 3 sub-views: Customer Ledgers (invoiced vs. paid vs. balance), Outstanding Invoices, and Unallocated Payments.
+
+6. **Screen 5: Report & Live Metrics (`ReportMetricsScreen.tsx`):**
+   - Real-time performance metrics: Precision (TP / [TP + FP]), Correct Suggestion Rate, Unresolved Count.
+   - Recharts visual bar chart showing High / Medium / Low / Flagged match distribution.
+   - Confusion matrix error list showing discrepancies for team review.
+   - Complete chronological Audit Trail table with an "Undo" action on recent entries.
+   - "Export Reconciliation Report (CSV)" button exporting all decisions, timestamps, and outstanding balances.
+
+---
+
+### 4. PRESENTATION LANDING PAGE (`index.html`)
+
+Include a standalone presentation landing page highlighting:
+- Domain & Problem Statement breakdown.
+- Solved deliverable cards with interactive hover effects.
+- Visual 5-step workflow diagram (Import → Match → Review → Exceptions → Export).
+- Interactive simulated preview table and animated metrics counters.
+- Clean terminal view showing all passing test suites.
